@@ -80,7 +80,7 @@ jobs:
         run: npm ci
       
       - name: Sync Capacitor
-        run: npx cap sync android
+        run: node_modules/.bin/cap sync android
       
       - name: Build Release APK
         run: |
@@ -121,7 +121,7 @@ jobs:
         run: npm ci
       
       - name: Sync Capacitor
-        run: npx cap sync ios
+        run: node_modules/.bin/cap sync ios
       
       - name: Install CocoaPods
         run: |
