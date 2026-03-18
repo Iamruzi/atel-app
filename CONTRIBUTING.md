@@ -13,7 +13,7 @@ Thank you for contributing!
 
 #### Setup
 ```bash
-git clone https://github.com/YOUR_USERNAME/atel-mobile-app.git
+git clone https://github.com/Iamruzi/atel-app.git
 cd atel-mobile-app
 npm install
 npx cap sync

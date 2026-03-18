@@ -1,13 +1,13 @@
 # ATEL Mobile App
 
-[![CI/CD](https://github.com/YOUR_USERNAME/atel-mobile-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/YOUR_USERNAME/atel-mobile-app/actions)
+[![CI/CD](https://github.com/Iamruzi/atel-app/actions/workflows/ci-cd.yml/badge.svg)](https://github.com/Iamruzi/atel-app/actions)
 
 ATEL (Agent Trust and Exchange Layer) mobile application.
 
 ## 📱 Download
 
-- **Android APK**: [Latest Release](https://github.com/YOUR_USERNAME/atel-mobile-app/releases/latest)
-- **iOS IPA**: [Latest Release](https://github.com/YOUR_USERNAME/atel-mobile-app/releases/latest)
+- **Android APK**: [Latest Release](https://github.com/Iamruzi/atel-app/releases/latest)
+- **iOS IPA**: [Latest Release](https://github.com/Iamruzi/atel-app/releases/latest)
 
 Direct: http://43.160.230.129:8888/ATEL.apk
 
@@ -27,7 +27,7 @@ Direct: http://43.160.230.129:8888/ATEL.apk
 
 ### Setup
 ```bash
-git clone https://github.com/YOUR_USERNAME/atel-mobile-app.git
+git clone https://github.com/Iamruzi/atel-app.git
 cd atel-mobile-app
 npm install
 npx cap sync
@@ -97,5 +97,5 @@ Proprietary
 
 ## 📞 Support
 
-- Issues: https://github.com/YOUR_USERNAME/atel-mobile-app/issues
+- Issues: https://github.com/Iamruzi/atel-app/issues
 - Email: support@atel.app
