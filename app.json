@@ -1,0 +1,21 @@
+{
+  "expo": {
+    "name": "ATEL",
+    "slug": "atel-capacitor-app",
+    "version": "1.0.0",
+    "ios": {
+      "bundleIdentifier": "com.atel.app",
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
+    },
+    "android": {
+      "package": "com.atel.app"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "3e3851e6-3095-454c-a572-ae4ba98a45b2"
+      }
+    }
+  }
+}

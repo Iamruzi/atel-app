@@ -1,0 +1,16 @@
+{
+  "appId": "com.atel.app",
+  "appName": "ATEL",
+  "webDir": "www",
+  "server": {
+    "cleartext": true,
+    "allowNavigation": [
+      "http://43.160.230.129:8888",
+      "http://43.160.230.129",
+      "*"
+    ]
+  },
+  "android": {
+    "allowMixedContent": true
+  }
+}

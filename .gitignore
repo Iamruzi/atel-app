@@ -1,0 +1,32 @@
+# Dependencies
+node_modules/
+package-lock.json
+
+# Build outputs
+android/build/
+android/.gradle/
+android/app/build/
+android/local.properties
+android/*.keystore
+
+ios/App/build/
+ios/App/Pods/
+ios/App/Podfile.lock
+
+# Capacitor
+android/app/src/main/assets/public/
+ios/App/App/public/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+
+# OS
+.DS_Store
+
+# Logs
+*.log
+
+# Environment
+.env

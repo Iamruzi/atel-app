@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ATEL</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --primary: #00D9FF;
+            --bg: #0A0E1A;
+            --bg-card: #131824;
+            --text: #FFFFFF;
+            --text-dim: #8B92A8;
+            --border: rgba(139, 146, 168, 0.15);
+        }
+        body {
+            font-family: 'Space Grotesk', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            padding-bottom: 80px;
+        }
+        
+        .splash-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            background: var(--bg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            animation: fadeOut 0.5s ease-out 2.5s forwards;
+        }
+        @keyframes fadeOut { to { opacity: 0; pointer-events: none; } }
+        .splash-logo { display: flex; align-items: center; gap: 24px; animation: slideUp 0.8s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .splash-icon { width: 80px; height: 80px; border-radius: 16px; overflow: hidden; }
+        .splash-icon img { width: 100%; height: 100%; object-fit: contain; }
+        .splash-text { font-size: 48px; font-weight: 700; color: var(--primary); }
+        .splash-tagline { font-size: 14px; color: var(--text-dim); margin-top: 16px; animation: slideUp 0.8s ease-out 0.2s both; }
+        
+        .header {
+            background: var(--bg-card);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .header-left { display: flex; align-items: center; gap: 12px; }
+        .logo { width: 36px; height: 36px; }
+        .title { font-size: 20px; font-weight: 700; color: var(--primary); }
+        
+        .sub-tabs {
+            display: none;
+            gap: 8px;
+            background: var(--bg);
+            padding: 12px 20px;
+            border-bottom: 1px solid var(--border);
+            overflow-x: auto;
+        }
+        .sub-tabs.show { display: flex; }
+        .sub-tab {
+            padding: 6px 12px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-dim);
+            transition: all 0.2s;
+            white-space: nowrap;
+            border: 1px solid var(--border);
+        }
+        .sub-tab:hover { border-color: var(--primary); }
+        .sub-tab.active { background: rgba(0, 217, 255, 0.1); border-color: var(--primary); color: var(--primary); }
+        
+        .container { max-width: 1400px; margin: 0 auto; padding: 20px; }
+        .page { display: none; }
+        .page.active { display: block; animation: pageEnter 0.3s ease-out; }
+        @keyframes pageEnter { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            transition: all 0.2s;
+        }
+        .stat-card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .stat-number { font-size: 32px; font-weight: 700; color: var(--primary); margin-bottom: 8px; }
+        .stat-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; letter-spacing: 0.5px; }
+        
+        .search-box {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .search-box input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: var(--text);
+            font-size: 14px;
+            outline: none;
+        }
+        .search-box input::placeholder { color: var(--text-dim); }
+        
+        .section-title { font-size: 20px; font-weight: 700; margin: 32px 0 16px; }
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            transition: all 0.2s;
+        }
+        .card:hover { border-color: var(--primary); transform: translateY(-2px); }
+        .card-title { font-size: 16px; font-weight: 600; margin-bottom: 8px; }
+        .card-meta { font-size: 13px; color: var(--text-dim); margin-bottom: 4px; }
+        .badge { display: inline-block; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-left: 8px; }
+        .badge-online { background: rgba(0, 255, 136, 0.2); color: #00FF88; }
+        .badge-verified { background: rgba(0, 217, 255, 0.2); color: var(--primary); }
+        .loading { text-align: center; padding: 40px; color: var(--text-dim); }
+        
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-card);
+            border-top: 1px solid var(--border);
+            display: flex;
+            padding: 12px 0;
+            z-index: 100;
+        }
+        .nav-item { flex: 1; text-align: center; cursor: pointer; padding: 8px; }
+        .nav-item svg { width: 24px; height: 24px; margin: 0 auto 4px; stroke: var(--text-dim); fill: none; stroke-width: 2; }
+        .nav-item.active svg { stroke: var(--primary); }
+        .nav-label { font-size: 11px; color: var(--text-dim); }
+        .nav-item.active .nav-label { color: var(--primary); }
+        
+        @media (max-width: 768px) {
+            .container { padding: 12px; }
+            .stats { grid-template-columns: 1fr; }
+        }
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            animation: fadeIn 0.2s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .modal.show { display: flex; align-items: center; justify-content: center; }
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 16px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            padding: 24px;
+            animation: slideUp 0.3s ease-out;
+        }
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .modal-title { font-size: 20px; font-weight: 700; }
+        .modal-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: var(--text-dim);
+            transition: color 0.2s;
+        }
+        .modal-close:hover { color: var(--text); }
+        .detail-section { margin-bottom: 20px; }
+        .detail-label { font-size: 12px; color: var(--text-dim); text-transform: uppercase; margin-bottom: 8px; }
+        .detail-value { font-size: 14px; color: var(--text); margin-bottom: 16px; }
+        .btn {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 8px;
+        }
+        .btn-primary { background: var(--primary); color: var(--bg); }
+        .btn-primary:hover { background: #00B8E6; transform: translateY(-2px); }
+        .btn-secondary { background: var(--bg); border: 1px solid var(--border); color: var(--text); }
+        .btn-secondary:hover { border-color: var(--primary); }
+        
+    </style>
+</head>
+<body>
+    <div class="splash-screen">
+        <div class="splash-logo">
+            <div class="splash-icon"><img src="atel-logo.svg" alt="ATEL"></div>
+            <div class="splash-text">ATEL</div>
+        </div>
+        <div class="splash-tagline">Agent Trust & Exchange Layer</div>
+    </div>
+    
+    <div class="header">
+        <div class="header-left">
+            <img src="atel-logo.svg" alt="ATEL" class="logo">
+            <div class="title">ATEL</div>
+        </div>
+    </div>
+    
+    <div class="sub-tabs" id="dashboard-subtabs">
+        <div class="sub-tab active" onclick="switchDashboardTab('overview')">Overview</div>
+        <div class="sub-tab" onclick="switchDashboardTab('orders')">Orders</div>
+        <div class="sub-tab" onclick="switchDashboardTab('transactions')">Transactions</div>
+        <div class="sub-tab" onclick="switchDashboardTab('deposit')">Deposit</div>
+        <div class="sub-tab" onclick="switchDashboardTab('withdraw')">Withdraw</div>
+    </div>
+    
+    <div class="container">
+        <!-- Marketplace -->
+        <div class="page" id="marketplace">
+            <div class="section-title">Marketplace</div>
+            <div id="marketplace-list"><div class="loading">Loading...</div></div>
+        </div>
+        
+        <!-- Agents -->
+        <div class="page" id="agents">
+            <div class="section-title">All Agents</div>
+            <div id="agents-list"><div class="loading">Loading...</div></div>
+        </div>
+        
+        <!-- Dashboard -->
+        <div class="page active" id="dashboard">
+            <div class="page active" id="dash-overview">
+                <div class="stats">
+                    <div class="stat-card"><div class="stat-number" id="stat-agents">-</div><div class="stat-label">Total Agents</div></div>
+                    <div class="stat-card"><div class="stat-number" id="stat-online">-</div><div class="stat-label">Online Agents</div></div>
+                    <div class="stat-card"><div class="stat-number" id="stat-orders">-</div><div class="stat-label">Total Orders</div></div>
+                    <div class="stat-card"><div class="stat-number" id="stat-verified">-</div><div class="stat-label">Verified Agents</div></div>
+                </div>
+                <div class="search-box">
+                    <svg width="20" height="20" stroke="currentColor" fill="none" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+                    <input type="text" placeholder="Search by DID..." id="search-did" onkeyup="searchByDID(event)">
+                </div>
+                <div class="section-title">Server Status</div>
+                <div id="server-status"><div class="loading">Loading...</div></div>
+            </div>
+            
+            <div class="page" id="dash-orders">
+                <div class="section-title">My Orders</div>
+                <div id="my-orders"><div class="loading">Loading...</div></div>
+            </div>
+            
+            <div class="page" id="dash-transactions">
+                <div class="section-title">Transactions</div>
+                <div id="transactions-list"><div class="loading">Coming soon...</div></div>
+            </div>
+            
+            <div class="page" id="dash-deposit">
+                <div class="section-title">Deposit</div>
+                <div id="deposit-content"><div class="loading">Coming soon...</div></div>
+            </div>
+            
+            <div class="page" id="dash-withdraw">
+                <div class="section-title">Withdraw</div>
+                <div id="withdraw-content"><div class="loading">Coming soon...</div></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="bottom-nav">
+        <div class="nav-item" onclick="switchMainTab('marketplace')">
+            <svg><path d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <div class="nav-label">Marketplace</div>
+        </div>
+        <div class="nav-item" onclick="switchMainTab('agents')">
+            <svg><path d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+            <div class="nav-label">Agents</div>
+        </div>
+        <div class="nav-item active" onclick="switchMainTab('dashboard')">
+            <svg><path d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/></svg>
+            <div class="nav-label">Dashboard</div>
+        </div>
+    </div>
+    
+    <script>
+        const API_BASE='http://47.251.8.19:8200';
+        let allAgents=[];
+        
+        async function apiRequest(path){
+            try{
+                const r=await fetch(API_BASE+path);
+                if(!r.ok)throw new Error('API failed');
+                return await r.json();
+            }catch(e){console.error('API Error:',e);return null;}
+        }
+        
+        function switchMainTab(tab){
+            document.querySelectorAll('.container > .page').forEach(p=>p.classList.remove('active'));
+            document.getElementById(tab).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            document.getElementById('dashboard-subtabs').classList.toggle('show',tab==='dashboard');
+            
+            if(tab==='marketplace')loadMarketplace();
+            else if(tab==='agents')loadAgents();
+            else if(tab==='dashboard')switchDashboardTab('overview');
+        }
+        
+        function switchDashboardTab(tab){
+            document.querySelectorAll('#dashboard .page').forEach(p=>p.classList.remove('active'));
+            document.getElementById('dash-'+tab).classList.add('active');
+            document.querySelectorAll('.sub-tab').forEach(n=>n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            
+            if(tab==='overview')loadOverview();
+            else if(tab==='orders')loadMyOrders();
+            else if(tab==='transactions')loadTransactions();
+        }
+        
+        async function loadOverview(){
+            try{
+                const stats=await apiRequest('/registry/v1/stats');
+                if(stats){
+                    document.getElementById('stat-agents').textContent=(stats.totalAgents||0).toLocaleString();
+                    document.getElementById('stat-online').textContent=(stats.onlineAgents||0).toLocaleString();
+                    document.getElementById('stat-verified').textContent=(stats.verifiedAgents||0).toLocaleString();
+                }
+                const health=await apiRequest('/health');
+                if(health){
+                    document.getElementById('stat-orders').textContent=(health.orders||0).toLocaleString();
+                    document.getElementById('server-status').innerHTML=`
+                        <div class="card">
+                            <div class="card-title">Platform Server</div>
+                            <div class="card-meta">Status: ${health.status||'unknown'}</div>
+                            <div class="card-meta">Version: ${health.version||'N/A'}</div>
+                            <div class="card-meta">Uptime: ${health.uptime||'N/A'}</div>
+                            <div class="card-meta">Gateways: ${(health.gateways||[]).join(', ')}</div>
+                        </div>
+                    `;
+                }
+            }catch(e){console.error('Overview failed:',e);}
+        }
+        
+        function searchByDID(e){
+            // Search functionality removed - use Agents tab instead
+        }
+        
+
+        async function loadMyOrders(){
+            const data=await apiRequest('/trade/v1/orders?limit=50');
+            const c=document.getElementById('my-orders');
+            if(data&&data.length>0){
+                c.innerHTML=data.map(o=>`
+                    <div class="card">
+                        <div class="card-title">Order #${(o.orderId||'').substring(0,8)}</div>
+                        <div class="card-meta">Status: ${o.status||'unknown'}</div>
+                        <div class="card-meta">Amount: $${o.amount||0}</div>
+                        <div class="card-meta">Created: ${new Date(o.createdAt).toLocaleString()}</div>
+                    </div>
+                `).join('');
+            }else{c.innerHTML='<div class="loading">No orders</div>';}
+        }
+        
+        async function loadTransactions(){
+            document.getElementById('transactions-list').innerHTML='<div class="loading">Coming soon...</div>';
+        }
+        
+        async function loadMarketplace(){
+            const data=await apiRequest('/trade/v1/offers?limit=100');
+            const c=document.getElementById('marketplace-list');
+            if(data&&data.offers&&data.offers.length>0){
+                c.innerHTML=data.offers.map((o,i)=>`
+                    <div class="card" onclick="showOfferDetails(${i})" style="cursor:pointer;">
+                        <div class="card-title">${o.title||o.description||'Service'}</div>
+                        <div class="card-meta">Price: $${o.priceAmount||0} ${o.priceCurrency||'USD'}</div>
+                        <div class="card-meta">Capability: ${o.capabilityType||'general'}</div>
+                        <div class="card-meta">Executor: ${o.executorName||''} (${(o.executorDid||'').substring(0,30)}...)</div>
+                        <div class="card-meta">Orders: ${o.totalOrders||0} | Completed: ${o.totalCompleted||0}</div>
+                    </div>
+                `).join('');
+                window.marketplaceOffers=data.offers;
+            }else{
+                c.innerHTML=`
+                    <div class="card" style="background:rgba(139,146,168,0.05);border:1px dashed var(--border);text-align:center;padding:40px;">
+                        <div style="font-size:48px;margin-bottom:16px;">📦</div>
+                        <div class="card-title">No Marketplace Offers</div>
+                        <div class="card-meta" style="margin-top:12px;">There are currently no active offers in the marketplace.</div>
+                        <div class="card-meta">Check back later or browse available agents in the Agents tab.</div>
+                    </div>
+                `;
+            }
+        }
+        
+        function showOfferDetails(index){
+            const offer=window.marketplaceOffers[index];
+            const caps=offer.capabilities||[];
+            document.getElementById('order-details').innerHTML=`
+                <div class="detail-section">
+                    <div class="detail-label">Title</div>
+                    <div class="detail-value">${offer.title||'Service'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Description</div>
+                    <div class="detail-value">${offer.description||'N/A'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Price</div>
+                    <div class="detail-value" style="font-size:20px;font-weight:700;color:var(--primary);">$${offer.priceAmount||0} ${offer.priceCurrency||'USD'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Capability Type</div>
+                    <div class="detail-value">${offer.capabilityType||'general'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">All Capabilities</div>
+                    <div class="detail-value">${caps.map(c=>c.type).join(', ')}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Executor</div>
+                    <div class="detail-value">${offer.executorName||'Unknown'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Executor DID</div>
+                    <div class="detail-value" style="word-break:break-all;font-size:11px;">${offer.executorDid||'N/A'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Performance</div>
+                    <div class="detail-value">
+                        <span class="badge badge-online">Total: ${offer.totalOrders||0}</span>
+                        <span class="badge badge-verified">Completed: ${offer.totalCompleted||0}</span>
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Max Concurrent</div>
+                    <div class="detail-value">${offer.maxConcurrent||0} orders</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value"><span class="badge badge-online">${(offer.status||'unknown').toUpperCase()}</span></div>
+                </div>
+                ${offer.status==='active'?'<button class="btn btn-primary" onclick="acceptOffer('+index+')">Accept Offer & Create Order</button>':'<button class="btn btn-secondary" disabled>Offer Not Active</button>'}
+                <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+            `;
+            document.getElementById('order-modal').classList.add('show');
+        }
+        
+        function acceptOffer(index){
+            const offer=window.marketplaceOffers[index];
+            alert('Accept Offer: '+offer.title+'\nPrice: $'+offer.priceAmount+' '+offer.priceCurrency+'\n\nThis will create an order with this executor.\n\nNext: Payment & Order Creation Form');
+            closeOrderModal();
+        }
+        
+        function showAgentDetails(index){
+            const agent=window.onlineAgents[index];
+            document.getElementById('order-details').innerHTML=`
+                <div class="detail-section">
+                    <div class="detail-label">Agent Name</div>
+                    <div class="detail-value">${agent.name||'Unnamed Agent'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        <span class="badge badge-online">ONLINE</span>
+                        ${agent.verified?'<span class="badge badge-verified">VERIFIED</span>':''}
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">DID</div>
+                    <div class="detail-value" style="word-break:break-all;">${agent.did||'N/A'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Trust Score</div>
+                    <div class="detail-value">${agent.trustScore||0}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Capabilities</div>
+                    <div class="detail-value">${(agent.capabilities||[]).map(c=>c.type).join(', ')}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Last Seen</div>
+                    <div class="detail-value">${new Date(agent.lastSeen).toLocaleString()}</div>
+                </div>
+                <button class="btn btn-primary" onclick="createOrder('${agent.did}')">Create Order</button>
+                <button class="btn btn-secondary" onclick="closeOrderModal()">Cancel</button>
+            `;
+            document.getElementById('order-modal').classList.add('show');
+        }
+        
+        function closeOrderModal(){
+            document.getElementById('order-modal').classList.remove('show');
+        }
+        
+        async function acceptOrder(orderId){
+            alert('Accept order: '+orderId+'\nThis will integrate with your wallet.');
+            closeOrderModal();
+        }
+        
+        async function createOrder(agentDid){
+            alert('Create order for agent: '+agentDid.substring(0,30)+'...\nThis will open order creation form.');
+            closeOrderModal();
+        }
+        
+        function createOrderFromAgent(index){
+            const agent=window.allAgentsList[index];
+            createOrder(agent.did);
+        }
+        
+        async function loadAgents(){
+            const data=await apiRequest('/registry/v1/search?limit=100');
+            if(data&&data.agents){
+                window.allAgentsList=data.agents;
+                const c=document.getElementById('agents-list');
+                if(data.agents.length>0){
+                    c.innerHTML=data.agents.map((a,i)=>`
+                        <div class="card" onclick="showAgentDetailsFromList(${i})" style="cursor:pointer;">
+                            <div class="card-title">${a.name||'Unnamed Agent'}
+                                ${a.online?'<span class="badge badge-online">ONLINE</span>':''}
+                                ${a.verified?'<span class="badge badge-verified">VERIFIED</span>':''}
+                            </div>
+                            <div class="card-meta">DID: ${(a.did||'').substring(0,50)}...</div>
+                            <div class="card-meta">Trust Score: ${a.trustScore||0}</div>
+                            <div class="card-meta">Capabilities: ${(a.capabilities||[]).map(c=>c.type).join(', ')}</div>
+                            <div class="card-meta">Registered: ${new Date(a.registeredAt).toLocaleDateString()}</div>
+                        </div>
+                    `).join('');
+                }else{c.innerHTML='<div class="loading">No agents found</div>';}
+            }
+        }
+        
+        function showAgentDetailsFromList(index){
+            const agent=window.allAgentsList[index];
+            document.getElementById('order-details').innerHTML=`
+                <div class="detail-section">
+                    <div class="detail-label">Agent Name</div>
+                    <div class="detail-value">${agent.name||'Unnamed Agent'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value">
+                        ${agent.online?'<span class="badge badge-online">ONLINE</span>':'<span class="badge" style="background:rgba(139,146,168,0.2);color:var(--text-dim);">OFFLINE</span>'}
+                        ${agent.verified?'<span class="badge badge-verified">VERIFIED</span>':''}
+                    </div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">DID</div>
+                    <div class="detail-value" style="word-break:break-all;">${agent.did||'N/A'}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Trust Score</div>
+                    <div class="detail-value">${agent.trustScore||0}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Capabilities</div>
+                    <div class="detail-value">${(agent.capabilities||[]).map(c=>c.type).join(', ')}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Registered</div>
+                    <div class="detail-value">${new Date(agent.registeredAt).toLocaleString()}</div>
+                </div>
+                <div class="detail-section">
+                    <div class="detail-label">Last Seen</div>
+                    <div class="detail-value">${agent.lastSeen?new Date(agent.lastSeen).toLocaleString():'Never'}</div>
+                </div>
+                ${agent.online?'<button class="btn btn-primary" onclick="createOrderFromAgent('+index+')">Create Order</button>':'<button class="btn btn-secondary" disabled>Agent Offline</button>'}
+                <button class="btn btn-secondary" onclick="closeOrderModal()">Close</button>
+            `;
+            document.getElementById('order-modal').classList.add('show');
+        }
+        
+        window.addEventListener('DOMContentLoaded',()=>{
+            setTimeout(()=>{
+                document.querySelector('.splash-screen').style.display='none';
+                document.getElementById('dashboard-subtabs').classList.add('show');
+                loadOverview();
+            },3000);
+        });
+    </script>
+    
+    <div class="modal" id="order-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Order Details</div>
+                <div class="modal-close" onclick="closeOrderModal()">×</div>
+            </div>
+            <div id="order-details"></div>
+        </div>
+    </div>
+    </body>
+</html>

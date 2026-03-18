@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" fill="none">
+  <defs>
+    <linearGradient id="atelTechBg" x1="56" y1="56" x2="456" y2="456" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#06090F"/>
+      <stop offset="56%" stop-color="#0B151A"/>
+      <stop offset="100%" stop-color="#12141C"/>
+    </linearGradient>
+    <radialGradient id="atelGlow" cx="0" cy="0" r="1" gradientUnits="userSpaceOnUse" gradientTransform="translate(318 146) rotate(146) scale(320)">
+      <stop offset="0%" stop-color="#35F6C8" stop-opacity="0.24"/>
+      <stop offset="100%" stop-color="#35F6C8" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="atelTechAccent" x1="190" y1="240" x2="326" y2="326" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#3BE8FF"/>
+      <stop offset="100%" stop-color="#63FFAF"/>
+    </linearGradient>
+    <linearGradient id="atelTechLight" x1="192" y1="260" x2="332" y2="332" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#EDFFF8"/>
+      <stop offset="100%" stop-color="#A8FFE8"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="56" y="56" width="400" height="400" rx="108" fill="url(#atelTechBg)"/>
+  <rect x="56.75" y="56.75" width="398.5" height="398.5" rx="107.25" stroke="#35F6C8" stroke-opacity="0.24" stroke-width="1.5"/>
+  <rect x="56" y="56" width="400" height="400" rx="108" fill="url(#atelGlow)"/>
+  <path d="M92 130C140 84 204 64 264 64C334 64 392 88 426 122V170C388 126 330 104 264 104C200 104 144 124 92 170V130Z" fill="#FFFFFF" fill-opacity="0.1"/>
+
+  <g stroke="#FFFFFF" stroke-width="36" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M170 350L256 164L342 350"/>
+  </g>
+
+  <g>
+    <path d="M204 268H274" stroke="url(#atelTechAccent)" stroke-width="24" stroke-linecap="round"/>
+    <path d="M274 244L316 268L274 292Z" fill="url(#atelTechAccent)"/>
+  </g>
+
+  <g>
+    <path d="M308 320H238" stroke="url(#atelTechLight)" stroke-width="22" stroke-linecap="round"/>
+    <path d="M238 298L196 320L238 342Z" fill="url(#atelTechLight)"/>
+  </g>
+</svg>
