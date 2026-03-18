@@ -99,3 +99,39 @@ Proprietary
 
 - Issues: https://github.com/Iamruzi/atel-app/issues
 - Email: support@atel.app
+
+## 🌳 分支策略
+
+本项目采用专业的分支管理策略：
+
+- **main**: 生产环境（稳定版本）
+- **develop**: 开发环境（最新功能）
+- **feature/***: 功能开发分支
+- **hotfix/***: 紧急修复分支
+
+详细说明请查看 [BRANCHING_STRATEGY.md](BRANCHING_STRATEGY.md)
+
+### 快速开始
+
+**开发新功能:**
+```bash
+git checkout develop
+git checkout -b feature/my-feature
+# 开发...
+git push origin feature/my-feature
+# 创建 PR 到 develop
+```
+
+**发布新版本:**
+```bash
+git checkout main
+git merge develop
+git tag v1.1.0
+git push origin main v1.1.0
+```
+
+### 构建版本
+
+- **main 分支**: 生产版本 `v1.0.0`
+- **develop 分支**: 开发版本 `v1.0.0-dev`
+- **feature 分支**: 测试版本 `v1.0.0-beta`
