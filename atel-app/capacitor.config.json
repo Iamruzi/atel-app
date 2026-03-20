@@ -1,0 +1,6 @@
+{
+  "appId": "com.atel.mobile",
+  "appName": "ATEL",
+  "webDir": "www",
+  "bundledWebRuntime": false
+}

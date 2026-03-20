@@ -1,0 +1,28 @@
+{
+  "name": "atel-mobile",
+  "version": "1.0.0",
+  "description": "ATEL Mobile App",
+  "main": "app.html",
+  "scripts": {
+    "init": "npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/ios",
+    "cap:init": "npx cap init",
+    "cap:add:android": "npx cap add android",
+    "cap:add:ios": "npx cap add ios",
+    "cap:sync": "npx cap sync",
+    "cap:open:android": "npx cap open android",
+    "cap:open:ios": "npx cap open ios"
+  },
+  "keywords": [
+    "atel",
+    "mobile",
+    "agent"
+  ],
+  "author": "ATEL",
+  "license": "MIT",
+  "dependencies": {
+    "@capacitor/android": "^8.2.0",
+    "@capacitor/cli": "^8.2.0",
+    "@capacitor/core": "^8.2.0",
+    "@capacitor/ios": "^8.2.0"
+  }
+}
